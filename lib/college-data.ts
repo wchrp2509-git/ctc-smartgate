@@ -7,6 +7,26 @@
 // ไฟล์นี้เป็นแหล่งข้อมูลเดียว (single source of truth) ที่ใช้ทั้งแสดงผลบนเว็บไซต์
 // และเป็นบริบท (context) ให้ AI แชทบอทใช้ตอบคำถาม
 
+// ภาพประชาสัมพันธ์/ป้ายโฆษณาการรับสมัครจริงของวิทยาลัย ใช้แสดงในสไลด์โชว์หน้าแรก
+export const promoSlides = [
+  {
+    src: "/slides/slide-1.jpg",
+    alt: "ประกาศรับสมัครนักเรียน นักศึกษาใหม่ ประจำปีการศึกษา 2567",
+  },
+  {
+    src: "/slides/slide-2.jpg",
+    alt: "เลือกสาขาที่ใช่ เรียนสาขาที่ชอบ ตอบโจทย์อาชีพที่ใฝ่ฝัน มาเรียนด้วยกันที่วิทยาลัยเทคนิคชัยภูมิ",
+  },
+  {
+    src: "/slides/slide-3.jpg",
+    alt: "งานประชาสัมพันธ์เปิดรับสมัครนักเรียน นักศึกษาใหม่ ประจำปีการศึกษา 2565",
+  },
+  {
+    src: "/slides/slide-4.jpg",
+    alt: "แผนกวิชาเทคโนโลยีสารสนเทศ เปิดรับสมัครนักเรียน นักศึกษา โควตา 68 ประจำปีการศึกษา 2568",
+  },
+];
+
 export const college = {
   name: "วิทยาลัยเทคนิคชัยภูมิ",
   englishName: "Chaiyaphum Technical College",
@@ -263,52 +283,39 @@ export const admission = {
 
 // สร้างข้อความบริบท (context) แบบย่อสำหรับส่งให้ AI แชทบอทใช้ตอบคำถาม
 // อัปเดตอัตโนมัติตามข้อมูลด้านบน เพื่อไม่ให้ข้อมูลในเว็บกับข้อมูลที่ AI ใช้ตอบไม่ตรงกัน
+//
+// หมายเหตุ: ตั้งใจเขียนให้กระชับที่สุดเท่าที่จำเป็น (ไม่ใส่รายละเอียด/อาชีพเต็มของทุกสาขา)
+// เพราะแชทบอทรันบนโมเดลขนาดเล็กผ่าน Ollama บน CPU ทั่วไป — บริบทที่ยาวเกินไปทำให้
+// การประมวลผลก่อนตอบช้ามาก (หลายสิบวินาทีถึงเป็นนาที) ถ้าต้องเพิ่มรายละเอียด
+// ควรทดสอบเวลาตอบสนองก่อน หรือเปลี่ยนไปใช้โมเดลที่ใหญ่ขึ้น/เร็วขึ้นแทน
 export function buildCollegeContext(): string {
   const programLines = programs
-    .map(
-      (p) =>
-        `- ${p.name} (${p.levels.join(", ")}) สังกัด${p.department}: ${p.description} แนวทางอาชีพ: ${p.careers.join("、")}`,
-    )
+    .map((p) => `- ${p.name} (${p.levels.join("/")})`)
     .join("\n");
 
   const newsLines = news
-    .map((n) => `- [${n.date}] ${n.title}: ${n.excerpt}`)
+    .slice(0, 3)
+    .map((n) => `- [${n.date}] ${n.title}`)
     .join("\n");
 
   return `
 ข้อมูลทั่วไปของวิทยาลัย
-ชื่อ: ${college.name} (${college.englishName})
-คำขวัญ/ความหมายสี: ${college.tagline} — ${college.colorMeaning}
-ก่อตั้ง: ${college.founded}
-ผู้อำนวยการ: ${college.director}
-รายละเอียด: ${college.about}
+${college.name} (${college.englishName}) — ${college.tagline}
 ที่อยู่: ${college.address}
-โทรศัพท์: ${college.phone}
-โทรสาร: ${college.fax}
-อีเมล: ${college.email}
-Facebook: ${college.facebook}
-Line OA: ${college.lineOA}
-YouTube: ${college.youtube}
-TikTok: ${college.tiktok}
+โทร: ${college.phone} | อีเมล: ${college.email} | Facebook: ${college.facebook} | Line OA: ${college.lineOA}
 เวลาทำการ: ${college.officeHours}
-เว็บไซต์ทางการ: ${college.officialWebsite}
 
 สาขาวิชาที่เปิดสอน
 ${programLines}
 
-การรับสมัครนักเรียน นักศึกษา ปีการศึกษา ${admission.academicYear}
+การรับสมัคร ปีการศึกษา ${admission.academicYear}
 ${admission.note}
-${admission.quotaRound.name}: ${admission.quotaRound.period}
-${admission.generalRound.name}: ${admission.generalRound.period}
-คุณสมบัติผู้สมัคร:
-${admission.qualifications.map((q) => `- ${q}`).join("\n")}
-เอกสารที่ต้องใช้:
-${admission.documents.map((d) => `- ${d}`).join("\n")}
-ขั้นตอนการสมัคร:
-${admission.steps.map((s, i) => `${i + 1}. ${s}`).join("\n")}
-ติดต่อสอบถามเรื่องการรับสมัคร: ${admission.contactForAdmission}
+คุณสมบัติ: ${admission.qualifications.join(" / ")}
+เอกสาร: ${admission.documents.join(" / ")}
+ขั้นตอน: ${admission.steps.join(" -> ")}
+สอบถามการรับสมัคร: ${admission.contactForAdmission}
 
-ข่าวประชาสัมพันธ์ล่าสุด
+ข่าวล่าสุด
 ${newsLines}
 `.trim();
 }
