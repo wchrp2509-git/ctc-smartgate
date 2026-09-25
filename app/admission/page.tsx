@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { admission, college } from "@/lib/college-data";
 
 export const metadata: Metadata = {
@@ -18,6 +19,21 @@ export default function AdmissionPage() {
       <div className="mt-6 flex gap-3 rounded-2xl border border-accent/30 bg-accent/10 p-4 text-sm text-brand-dark">
         <span className="shrink-0">ℹ️</span>
         <p>{admission.note}</p>
+      </div>
+
+      <div className="mt-6 flex flex-col items-start gap-3 rounded-2xl bg-gradient-to-br from-brand to-brand-light p-6 text-white shadow-lg sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <p className="font-semibold">📝 กรอกใบสมัครออนไลน์ (ประเภทโควตา)</p>
+          <p className="mt-1 text-sm text-white/85">
+            กรอกข้อมูลล่วงหน้า แล้วพิมพ์ใบสมัครพร้อมยื่นเอกสารหลักฐานที่งานทะเบียนวิทยาลัย
+          </p>
+        </div>
+        <Link
+          href="/admission/apply"
+          className="shrink-0 rounded-full bg-white px-6 py-3 text-sm font-semibold text-brand-dark shadow-md transition-transform hover:scale-105"
+        >
+          กรอกใบสมัคร →
+        </Link>
       </div>
 
       <div className="mt-8 grid gap-4 sm:grid-cols-2">
