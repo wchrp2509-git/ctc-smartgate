@@ -1,12 +1,22 @@
+import Image from "next/image";
 import Link from "next/link";
 import { college } from "@/lib/college-data";
 
 export default function Footer() {
   return (
-    <footer className="mt-16 border-t border-border-subtle bg-brand-dark text-white">
+    <footer className="mt-16 border-t border-border-subtle bg-brand-dark text-white print:hidden">
       <div className="mx-auto grid max-w-6xl gap-8 px-4 py-10 sm:px-6 md:grid-cols-3">
         <div>
-          <h3 className="text-lg font-semibold">🎓 {college.name}</h3>
+          <div className="flex items-center gap-3">
+            <Image
+              src="/college-logo.png"
+              alt={`ตราสัญลักษณ์ ${college.name}`}
+              width={44}
+              height={44}
+              className="h-11 w-11 shrink-0"
+            />
+            <h3 className="text-lg font-semibold">{college.name}</h3>
+          </div>
           <p className="mt-1 text-sm text-white/70">{college.englishName}</p>
           <p className="mt-3 text-sm leading-relaxed text-white/80">📍 {college.address}</p>
         </div>
