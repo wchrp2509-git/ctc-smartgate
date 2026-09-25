@@ -1,8 +1,57 @@
 services:
+  mariadb:
+    image: mariadb:11
+    env_file:
+      - .env.local
+    environment:
+      - TZ=Asia/Bangkok
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    restart: unless-stopped
+
+  ollama:
+    image: ollama/ollama:latest
+    volumes:
+      - ollama_data:/root/.ollama
+    ports:
+      - "11434:11434"
+    entrypoint: ["/bin/sh", "-c"]
+    # เริ่ม Ollama แล้วดาวน์โหลดโมเดลอัตโนมัติ (ครั้งแรกจะใช้เวลาสักพักตามความเร็วอินเทอร์เน็ต)
+    command:
+      - |
+        ollama serve &
+        sleep 3
+        ollama pull llama3.2:3b
+        wait
+    restart: unless-stopped
+
   web:
     build: .
     ports:
       - "3000:3000"
     env_file:
       - .env.local
+    environment:
+      - OLLAMA_BASE_URL=http://ollama:11434
+      - OLLAMA_MODEL=llama3.2:3b
+      - TZ=Asia/Bangkok
+      # ชื่อ service ของ MariaDB ใน docker network นี้ (แทนค่า DB_HOST=localhost ใน .env.local)
+      - DB_HOST=mariadb
+    depends_on:
+      ollama:
+        condition: service_started
+      mariadb:
+        condition: service_healthy
     restart: unless-stopped
+
+volumes:
+  ollama_data:
+  mariadb_data:
