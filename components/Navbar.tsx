@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { college } from "@/lib/college-data";
@@ -16,12 +17,17 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-40 border-b border-border-subtle bg-white/90 shadow-sm backdrop-blur-md">
+    <header className="sticky top-0 z-40 border-b border-border-subtle bg-white/90 shadow-sm backdrop-blur-md print:hidden">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6">
         <Link href="/" className="flex items-center gap-3">
-          <span className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-brand-light to-brand text-lg shadow-md shadow-brand/30">
-            🎓
-          </span>
+          <Image
+            src="/college-logo.png"
+            alt={`ตราสัญลักษณ์ ${college.name}`}
+            width={40}
+            height={40}
+            className="h-10 w-10 shrink-0 drop-shadow-sm"
+            priority
+          />
           <span className="leading-tight">
             <span className="block text-sm font-semibold text-brand-dark sm:text-base">
               {college.name}
