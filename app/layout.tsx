@@ -19,6 +19,11 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: `${college.name} | ${college.englishName}`,
   description: college.tagline,
+  openGraph: {
+    title: `${college.name} | ${college.englishName}`,
+    description: college.tagline,
+    images: ["/college-logo.png"],
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
