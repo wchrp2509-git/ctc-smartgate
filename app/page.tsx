@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { admission, college, news, programs } from "@/lib/college-data";
+import ImageSlideshow from "@/components/ImageSlideshow";
+import { admission, college, news, programs, promoSlides } from "@/lib/college-data";
 
 const HIGHLIGHTS = [
   {
@@ -87,6 +88,13 @@ export default function HomePage() {
       </section>
 
       <section className="mx-auto max-w-6xl px-4 py-14 sm:px-6">
+        <h2 className="text-2xl font-bold text-brand-dark">📸 ภาพประชาสัมพันธ์</h2>
+        <div className="mt-6">
+          <ImageSlideshow slides={promoSlides} />
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-6xl px-4 pb-14 sm:px-6">
         <h2 className="text-2xl font-bold text-brand-dark">⭐ ทำไมต้องเรียนที่นี่</h2>
         <div className="mt-6 grid gap-6 sm:grid-cols-3">
           {HIGHLIGHTS.map((h) => (
